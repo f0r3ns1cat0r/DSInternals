@@ -2,6 +2,12 @@
   "version": 2,
   "dependencies": {
     ".NETFramework,Version=v4.8": {
+      "DotNet.ReproducibleBuilds": {
+        "type": "Direct",
+        "requested": "[2.0.5, )",
+        "resolved": "2.0.5",
+        "contentHash": "8LrlvI1KpjjJ4VGSqZ16yoOCKlQnYS+Y8rYNifNrscmVh5anJcF9E4e0NiDP30BHBMUbkoJ5KdcxoRWM7Pz9Aw=="
+      },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
         "requested": "[8.0.0, )",
@@ -88,7 +94,7 @@
       "dsinternals.adsi": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "dsinternals.common": {
@@ -105,7 +111,7 @@
       "dsinternals.datastore": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )",
+          "DSInternals.Common": "[7.1.0, )",
           "DSInternals.ManagedEsent.Interop": "[2.0.4.1, )",
           "DSInternals.ManagedEsent.Isam": "[2.0.4.1, )"
         }
@@ -113,19 +119,19 @@
       "dsinternals.replication": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "dsinternals.replication.model": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "dsinternals.sam": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "DSInternals.ManagedEsent.Interop": {
@@ -208,6 +214,12 @@
       }
     },
     "net8.0-windows7.0": {
+      "DotNet.ReproducibleBuilds": {
+        "type": "Direct",
+        "requested": "[2.0.5, )",
+        "resolved": "2.0.5",
+        "contentHash": "8LrlvI1KpjjJ4VGSqZ16yoOCKlQnYS+Y8rYNifNrscmVh5anJcF9E4e0NiDP30BHBMUbkoJ5KdcxoRWM7Pz9Aw=="
+      },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
         "requested": "[8.0.0, )",
@@ -243,7 +255,7 @@
       "dsinternals.adsi": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )",
+          "DSInternals.Common": "[7.1.0, )",
           "System.DirectoryServices": "[9.0.8, )"
         }
       },
@@ -256,7 +268,7 @@
       "dsinternals.datastore": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )",
+          "DSInternals.Common": "[7.1.0, )",
           "DSInternals.ManagedEsent.Interop": "[2.0.4.1, )",
           "DSInternals.ManagedEsent.Isam": "[2.0.4.1, )"
         }
@@ -264,19 +276,19 @@
       "dsinternals.replication": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "dsinternals.replication.model": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "dsinternals.sam": {
         "type": "Project",
         "dependencies": {
-          "DSInternals.Common": "[6.5.0, )"
+          "DSInternals.Common": "[7.1.0, )"
         }
       },
       "DSInternals.ManagedEsent.Interop": {

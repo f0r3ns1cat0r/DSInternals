@@ -43,9 +43,6 @@
     <Copyright>Copyright © 2015-2026 Michael Grafnetter. All rights reserved.</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/MichaelGrafnetter/DSInternals</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MichaelGrafnetter/DSInternals</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -63,7 +60,8 @@
     <None Include="$(MSBuildThisFileDirectory)../LICENSE.md" Pack="true" PackagePath="/" Visible="false" />
     <None Include="$(MSBuildProjectDirectory)/PACKAGE.md" Pack="true" PackagePath="/README.md" Visible="true" Condition="Exists('$(MSBuildProjectDirectory)/PACKAGE.md')" />
 
-    <!-- Enable source-link -->
+    <!-- Enable reproducible build defaults and source-link -->
+    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
 
     <!-- Expose new .NET features like ThrowIf to .NET Framework. -->
@@ -100,13 +98,6 @@
     <StrongNamePublicKey>002400000480000094000000060200000024000052534131000400000100010077154b93d8084f0f30c52174d6c93d25ffdc65e11ba1b125383e55c6095061df3c2f765401c21434aa413aa264b6eb3039d95c5f33a9d4eb7deb695b55e434d8dd9b42e0e86f3287498732d3a30d0ee22d8d58b2361f033351d5c1a64a16324ac6c42b5a4b14c12483b52a98a43f7e934df86b92cc8a9c4ee0f408d7b6d987e3</StrongNamePublicKey>
     <DelaySign>false</DelaySign>
    </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND '$(GITHUB_ACTIONS)' == 'true'">
-    <!-- Enable continuous integration build metadata for GitHub Actions -->
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <!-- Enable deterministic builds -->
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
 
   <!-- Configure C# test projects -->
   <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Test'))">
