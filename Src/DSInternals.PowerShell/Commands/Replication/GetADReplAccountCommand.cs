@@ -23,15 +23,6 @@ public class GetADReplAccountCommand : ADReplPrincipalCommandBase
         set;
     }
 
-    [Parameter(Mandatory = false, ParameterSetName = ParameterSetAll)]
-    [ValidateNotNullOrEmpty]
-    [Alias("NC", "DomainNC", "DomainNamingContext")]
-    public string NamingContext
-    {
-        get;
-        set;
-    }
-
     [Parameter(Mandatory = false)]
     [Alias("Property", "PropertySets", "PropertySet")]
     [PSDefaultValue(Value = "All")]
@@ -149,13 +140,10 @@ public class GetADReplAccountCommand : ADReplPrincipalCommandBase
             this.WriteProgress(progressRecord);
         });
 
-        // Automatically infer domain name if no value is provided
-        string domainNamingContext = this.NamingContext ?? this.ReplicationClient.DomainNamingContext;
-
         try
         {
             // Replicate all accounts
-            foreach (var account in this.ReplicationClient.GetAccounts(domainNamingContext, progress, this.Properties, _cancellationTokenSource.Token))
+            foreach (var account in this.ReplicationClient.GetAccounts(progress, this.Properties, _cancellationTokenSource.Token))
             {
                 this.WriteObject(account);
             }

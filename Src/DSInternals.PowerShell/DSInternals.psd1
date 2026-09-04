@@ -100,6 +100,7 @@ CmdletsToExport = @(
     'Get-ADDBAccount',
     'Get-BootKey',
     'Get-ADReplAccount',
+    'Get-ADReplTrust',
     'ConvertTo-Hex',
     'ConvertTo-KerberosKey',
     'ConvertFrom-ADManagedPasswordBlob',

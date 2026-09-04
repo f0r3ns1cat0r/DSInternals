@@ -7,6 +7,15 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+### Added
+
+- Added the [Get-ADReplTrust](PowerShell/Get-ADReplTrust.md#get-adrepltrust) cmdlet for reading a specific trusted-domain object from a domain controller through the MS-DRSR protocol.
+
+### Changed
+
+- **Breaking ([Get-ADReplAccount](PowerShell/Get-ADReplAccount.md#get-adreplaccount) cmdlet):** Removed the `-NamingContext` parameter. The cmdlet now always resolves the domain naming context automatically from the target domain controller.
+- **Breaking (`DSInternals.Replication` library):** Removed the `domainNamingContext` parameter from `DirectoryReplicationClient.GetAccounts`. The method now replicates accounts from the connected domain naming context resolved by the client.
+
 ## [7.1] - 2026-07-04
 
 ### Fixed

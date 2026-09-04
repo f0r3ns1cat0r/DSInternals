@@ -14,7 +14,7 @@ Reads one or more accounts through the MS-DRSR protocol, including secret attrib
 
 ### All
 ```
-Get-ADReplAccount [-All] [-NamingContext <String>] [-Properties <AccountPropertySets>]
+Get-ADReplAccount [-All] [-Properties <AccountPropertySets>]
  [-ExportFormat <AccountExportFormat>] -Server <String> [-Credential <PSCredential>] [<CommonParameters>]
 ```
 
@@ -427,21 +427,6 @@ Type: AccountExportFormat
 Parameter Sets: (All)
 Aliases: View, ExportView, Format
 Accepted values: JohnNT, JohnNTHistory, JohnLM, JohnLMHistory, HashcatNT, HashcatNTHistory, HashcatLM, HashcatLMHistory, NTHash, NTHashHistory, LMHash, LMHashHistory, Ophcrack, PWDump, PWDumpHistory
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -NamingContext
-Specifies the naming context root of the replica to replicate.
-
-```yaml
-Type: String
-Parameter Sets: All
-Aliases: NC, DomainNC, DomainNamingContext
 
 Required: False
 Position: Named

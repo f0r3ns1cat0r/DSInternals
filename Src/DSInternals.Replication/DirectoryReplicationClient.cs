@@ -5,6 +5,7 @@ using DSInternals.Common;
 using DSInternals.Common.Cryptography;
 using DSInternals.Common.Data;
 using DSInternals.Common.Exceptions;
+using DSInternals.Common.Kerberos;
 using DSInternals.Common.Schema;
 using DSInternals.Replication.Interop;
 using DSInternals.Replication.Model;
@@ -55,7 +56,7 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
     private RpcBinding _rpcBinding;
     private DrsConnection _drsConnection;
     private IKdsRootKeyResolver _rootKeyResolver;
-    private readonly Lazy<(string DomainNamingContext, string NetBIOSDomainName)> _domainInfo;
+    private readonly Lazy<(string DomainNamingContext, string DNSDomainName, string NetBIOSDomainName)> _domainInfo;
     private readonly Lazy<string[]> _namingContexts;
     private readonly Lazy<DirectorySecretDecryptor> _secretDecryptor;
     private EventHandler<SessionKeyChangedEventArgs> _sessionKeyChangedHandler;
@@ -64,6 +65,11 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
     /// The domain naming context of the connected server.
     /// </summary>
     public string DomainNamingContext => _domainInfo.Value.DomainNamingContext;
+
+    /// <summary>
+    /// The DNS domain name of the connected server.
+    /// </summary>
+    public string DNSDomainName => _domainInfo.Value.DNSDomainName;
 
     /// <summary>
     /// The NetBIOS domain name of the connected server.
@@ -120,7 +126,7 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
         this._rootKeyResolver = new KdsRootKeyCache(this);
 
         // Lazily fetch domain info, naming contexts, and the secret decryptor on first access.
-        this._domainInfo = new Lazy<(string, string)>(this.LoadDomainInfo);
+        this._domainInfo = new Lazy<(string, string, string)>(this.LoadDomainInfo);
         this._namingContexts = new Lazy<string[]>(() => this._drsConnection.ListNamingContexts());
         this._secretDecryptor = new Lazy<DirectorySecretDecryptor>(() =>
         {
@@ -147,16 +153,15 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
     }
 
     /// <summary>
-    /// Retrieves all accounts from the specified domain partition.
+    /// Retrieves all accounts from the current domain partition.
     /// </summary>
-    /// <param name="domainNamingContext">The distinguished name of the domain partition.</param>
     /// <param name="progress">Optional progress reporter invoked after each replication cycle.</param>
     /// <param name="propertySets">The set of properties to retrieve for each account.</param>
     /// <param name="cancellationToken">Token used to cooperatively cancel the replication between cycles.</param>
     /// <returns>An enumerable collection of directory service accounts.</returns>
-    public IEnumerable<DSAccount> GetAccounts(string domainNamingContext, IProgress<ReplicationProgress> progress = null, AccountPropertySets propertySets = AccountPropertySets.All, CancellationToken cancellationToken = default)
+    public IEnumerable<DSAccount> GetAccounts(IProgress<ReplicationProgress> progress = null, AccountPropertySets propertySets = AccountPropertySets.All, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(domainNamingContext);
+        string domainNamingContext = this.DomainNamingContext;
 
         return ReplicateAllObjects(domainNamingContext, progress, cancellationToken)
             .Select(dsObject => AccountFactory.CreateAccount(dsObject, this.NetBIOSDomainName, _secretDecryptor.Value, _rootKeyResolver, propertySets))
@@ -257,6 +262,58 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
     {
         Guid objectGuid = this._drsConnection.ResolveGuid(sid);
         return this.GetAccount(objectGuid, propertySets);
+    }
+
+    /// <summary>
+    /// Retrieves a single trusted-domain object by name from the current domain.
+    /// </summary>
+    /// <param name="name">The trust object name (CN) to retrieve.</param>
+    /// <returns>The trusted-domain object.</returns>
+    public TrustedDomain GetTrustedDomain(string name)
+    {
+        return this.GetTrustedDomain(name, this.DomainNamingContext, this.DNSDomainName);
+    }
+
+    /// <summary>
+    /// Retrieves a single trusted-domain object by name.
+    /// </summary>
+    /// <param name="name">The trust object name (CN) to retrieve.</param>
+    /// <param name="domain">The DNS name of the domain containing the trust object.</param>
+    /// <returns>The trusted-domain object.</returns>
+    /// <exception cref="DirectoryObjectOperationException">Thrown when the object is not a trusted-domain object.</exception>
+    public TrustedDomain GetTrustedDomain(string name, string domain)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(domain);
+
+        string domainNamingContext = DistinguishedName.GetDNFromDNSName(domain).ToString();
+        return this.GetTrustedDomain(name, domainNamingContext, domain);
+    }
+
+    /// <summary>
+    /// Retrieves a single trusted-domain object by name.
+    /// </summary>
+    /// <param name="name">The trust object name (CN) to retrieve.</param>
+    /// <param name="domainNamingContext">The domain naming context containing the trust object.</param>
+    /// <param name="dnsDomainName">The DNS domain name containing the trust object.</param>
+    /// <returns>The trusted-domain object.</returns>
+    /// <exception cref="DirectoryObjectOperationException">Thrown when the object is not a trusted-domain object.</exception>
+    public TrustedDomain GetTrustedDomain(string name, string domainNamingContext, string dnsDomainName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(domainNamingContext);
+        ArgumentException.ThrowIfNullOrWhiteSpace(dnsDomainName);
+
+        // TODO: validate the input against injection attacks.
+        // TODO: Consider using the DistinguishedName class for DN concatenation.
+        string trustDN = $"CN={name},CN=System,{domainNamingContext}";
+
+        var trustObject = this._drsConnection.ReplicateSingleObject(trustDN);
+        return new TrustedDomain(
+            trustObject,
+            dnsDomainName,
+            this.NetBIOSDomainName,
+            _secretDecryptor.Value);
     }
 
     /// <summary>
@@ -544,9 +601,9 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
     }
 
     /// <summary>
-    /// Loads the domain naming context and NetBIOS domain name of the connected server.
+    /// Loads the domain naming context, DNS domain name, and NetBIOS domain name of the connected server.
     /// </summary>
-    private (string DomainNamingContext, string NetBIOSDomainName) LoadDomainInfo()
+    private (string DomainNamingContext, string DNSDomainName, string NetBIOSDomainName) LoadDomainInfo()
     {
         // These is no direct way of retrieving current DC's domain info, so we are using a combination of 3 calls.
 
@@ -562,12 +619,13 @@ public class DirectoryReplicationClient : IDisposable, IKdsRootKeyResolver
 
         // Get the PDC Emulator's domain naming context.
         string domainNamingContext = new DistinguishedName(pdcAccountDN).RootNamingContext.ToString();
+        string dnsDomainName = new DistinguishedName(domainNamingContext).GetDnsName();
 
         // Get the PDC Emulator's NetBIOS account name and extract the domain part.
         NTAccount pdcAccount = _drsConnection.ResolveAccountName(pdcAccountDN);
         string netBIOSDomainName = pdcAccount.NetBIOSDomainName();
 
-        return (domainNamingContext, netBIOSDomainName);
+        return (domainNamingContext, dnsDomainName, netBIOSDomainName);
     }
 
     #region IKdsRootKeyResolver

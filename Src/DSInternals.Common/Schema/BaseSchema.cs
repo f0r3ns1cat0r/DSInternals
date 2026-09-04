@@ -156,6 +156,17 @@ public class BaseSchema
         schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.WhenChanged, prefixTable));
         schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.WhenCreated, prefixTable));
 
+        // Trust
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustPartner, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustPartnerFlatName, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustDirection, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustAttributes, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustType, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustPosixOffset, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustAuthIncoming, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.TrustAuthOutgoing, prefixTable));
+        schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.SecurityIdentifier, prefixTable));
+
         // Secrets
         schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.NTHash, prefixTable));
         schema.AddAttribute(AttributeSchema.Create(CommonDirectoryAttributes.NTHashHistory, prefixTable));
