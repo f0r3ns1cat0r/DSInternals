@@ -108,6 +108,9 @@ Physically removes the specified object from a ntds.dit file, making it semantic
 #### [Get-ADReplAccount](Get-ADReplAccount.md#get-adreplaccount)
 Reads one or more accounts through the MS-DRSR protocol, including secret attributes.
 
+#### [Get-ADReplTrust](Get-ADReplTrust.md#get-adrepltrust)
+Reads a specific trust object from a domain controller through the MS-DRSR protocol.
+
 #### [Get-ADReplBackupKey](Get-ADReplBackupKey.md#get-adreplbackupkey)
 Reads the DPAPI backup keys from a domain controller through the MS-DRSR protocol.
 

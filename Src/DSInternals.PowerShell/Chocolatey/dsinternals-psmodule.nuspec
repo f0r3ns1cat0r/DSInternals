@@ -36,7 +36,8 @@ The DSInternals PowerShell Module has these main features:
 ## Disclaimer
 Features exposed through these tools are not supported by Microsoft. Improper use might cause irreversible damage to domain controllers or negatively impact domain security.</description>
     <releaseNotes>
-* Fixed Get-ADDBTrust failures on Windows versions that no longer support DES Kerberos key derivation; trust key generation now derives only AES and RC4 keys.
+* Added the Get-ADReplTrust cmdlet for reading a specific trusted-domain object from a domain controller through the MS-DRSR protocol.
+* Breaking: Removed the -NamingContext parameter from the Get-ADReplAccount cmdlet, which now resolves the domain naming context automatically from the target domain controller.
     </releaseNotes>
     <dependencies>
       <!-- Windows Management Framework 5.1+. For OS prior to Windows 10 and Windows Server 2016. -->

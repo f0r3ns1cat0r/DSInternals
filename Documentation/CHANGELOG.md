@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [7.2] - 2026-09-11
+
 ### Added
 
 - Added the [Get-ADReplTrust](PowerShell/Get-ADReplTrust.md#get-adrepltrust) cmdlet for reading a specific trusted-domain object from a domain controller through the MS-DRSR protocol.
@@ -774,7 +776,8 @@ This is a [Chocolatey](https://chocolatey.org/packages/dsinternals-psmodule)-onl
 ## 1.0 - 2015-01-20
 Initial release!
 
-[Unreleased]: https://github.com/MichaelGrafnetter/DSInternals/compare/v7.1...HEAD
+[Unreleased]: https://github.com/MichaelGrafnetter/DSInternals/compare/v7.2...HEAD
+[7.2]: https://github.com/MichaelGrafnetter/DSInternals/compare/v7.1...v7.2
 [7.1]: https://github.com/MichaelGrafnetter/DSInternals/compare/v7.0...v7.1
 [7.0]: https://github.com/MichaelGrafnetter/DSInternals/compare/v6.5...v7.0
 [6.5]: https://github.com/MichaelGrafnetter/DSInternals/compare/v6.4...v6.5

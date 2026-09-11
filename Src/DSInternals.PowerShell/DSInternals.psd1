@@ -12,7 +12,7 @@ RootModule = if ($PSEdition -eq 'Core') {
 }
 
 # Version number of this module.
-ModuleVersion = '7.1'
+ModuleVersion = '7.2'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -310,7 +310,8 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @"
-- Fixed Get-ADDBTrust failures on Windows versions that no longer support DES Kerberos key derivation; trust key generation now derives only AES and RC4 keys.
+- Added the Get-ADReplTrust cmdlet for reading a specific trusted-domain object from a domain controller through the MS-DRSR protocol.
+- Breaking: Removed the -NamingContext parameter from the Get-ADReplAccount cmdlet, which now resolves the domain naming context automatically from the target domain controller.
 "@
     } # End of PSData hashtable
 
